@@ -16,7 +16,7 @@ class Product extends Model
         'product_number',
         'upc',
         'sku',
-        'regular_price_sale',
+        'regular_price',
         'sale_price',
         'description'
     ];

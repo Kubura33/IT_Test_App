@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\ExportProductsToCsv;
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
@@ -37,6 +38,16 @@ class ProductController extends Controller
         return response()->json(new ProductResource($product));
     }
 
+    public function exportByCategory(Request $request, string $category_name){
+        $products = Product::with(['department:id,name','category:id,name','manufacturer:id,name'])->filter(['category_name' => $category_name])->get();
+        if($products->isEmpty()){
+            return response()->json(['message' => 'No products found for this category'], 404);
+        }
+        $filePath = app(ExportProductsToCsv::class)->execute($products);
+
+
+       return response()->download($filePath)->deleteFileAfterSend(true);
+    }
     /**
      * Remove the specified resource from storage.
      */

@@ -16,3 +16,6 @@ Route::apiResource('categories', CategoryController::class)->only(['index', 'sho
 Route::apiResource('products', ProductController::class)->only(['index', 'show', 'update', 'destroy'])->missing(function (Request $request) {
     return response()->json(['message' => "This resource doesn't exist"], 404);
 });
+Route::get('/export-csv/{category_name}', [ProductController::class, 'exportByCategory'])->missing(function (Request $request) {
+    return response()->json(['message' => "Products with this category not found"], 404);
+});

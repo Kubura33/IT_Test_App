@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string("product_number")->unique();
             $table->string("upc")->unique();
             $table->string("sku")->unique();
-            $table->decimal("regular_price_sale", 10, 2); //2 decimalna mesta max
+            $table->decimal("regular_price", 10, 2); //2 decimalna mesta max
             $table->decimal("sale_price", 10, 2); //2 decimalna mesta max
             $table->text("description"); //String ima maksimum of 255 karaktera, dok text nema specificnu duzinu
             $table->timestamps();

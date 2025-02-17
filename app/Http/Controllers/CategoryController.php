@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CategoryResource;
+use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -12,23 +14,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return response()->json(Category::with(['products'])->get());
-    }
+        return response()->json(
+            CategoryResource::collection(Category::with(['products'])->get())
+        );
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -36,15 +25,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return response()->json($category->load(['products']));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return response()->json(new CategoryResource($category->load(['products'])));
     }
 
     /**
@@ -55,8 +36,8 @@ class CategoryController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
         ]);
-        $category->update($request->validated());
-        return response()->json($category->load(['products']));
+        $category->update($request->all());
+        return response()->json($category);
     }
 
     /**
