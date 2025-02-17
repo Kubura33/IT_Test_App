@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -28,5 +29,14 @@ class Product extends Model
     }
     public function manufacturer() : BelongsTo{
         return $this->belongsTo(Manufacturer::class, "manufacturer_id");
+    }
+
+    public function scopeFilter(Builder $query, $filters): Builder{
+        return $query->when($filters['category_name'] ?? false,
+            fn($query, $value) => Product::whereHas('category', function ($query) use ($value) {
+                //Vraca parcijalne matcheve, za exact match koristiti "="
+                $query->where('name', 'like', "%{$value}%");
+            })
+        );
     }
 }

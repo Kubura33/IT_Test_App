@@ -32,6 +32,7 @@ class ImportProducts extends Command
         //product_number,category_name,deparment_name,manufacturer_name,upc,sku,regular_price,sale_price,description
         $filePath = base_path('product_categories.csv');
         $data = [];
+        $now = now();
         $handle = fopen($filePath, "r");
         fgetcsv($handle); //Preskacem header
         while(($productData = fgetcsv($handle)) !== false) {
@@ -45,6 +46,8 @@ class ImportProducts extends Command
                 'regular_price_sale' => $productData[6],
                 'sale_price' => $productData[7],
                 'description' => $productData[8],
+                'created_at' => $now,
+                'updated_at' => $now,
             ];
             if(count($data) === 1000){
                 Product::insert($data);
